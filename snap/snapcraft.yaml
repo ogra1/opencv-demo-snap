@@ -1,5 +1,7 @@
 name: opencv-demo-ogra
 version: '0.1'
+base: core20
+type: app
 summary: A little face recognition test
 description: |
   A simple OpenCV demo snap, shipping with three python based demos
@@ -15,101 +17,112 @@ confinement: strict
 
 apps:
   daemon:
-    command: desktop-launch xwayland-kiosk-launch eyedetect.py
+    command: snap/command-chain/desktop-launch $SNAP/usr/local/bin/xwayland-kiosk-launch $SNAP/bin/eyedetect.py
     daemon: simple
+    extensions: [ gnome-3-38 ]
+    
     environment:
-      LD_LIBRARY_PATH: $SNAP/usr/lib/atlas-base/atlas:$LD_LIBRARY_PATH
+      LD_LIBRARY_PATH: $SNAP/usr/lib/atlas-base/atlas:$SNAP/usr/lib/x86_64-linux-gnu/atlas/:$LD_LIBRARY_PATH
       XWAYLAND_FULLSCREEN_WINDOW_HINT: title="opencv-demo"
-    slots: [ x11 ]
+    slots: [ x11-slot ]
     plugs:
       - camera
       - home
-      - mir
+     # - mir
       - network
       - network-bind
-      - opengl
-      - wayland
-      - x11-plug
+     # - opengl
+     # - wayland
+     # - x11-plug
   vidcapture:
-    command: vidcapture.py
+    command: bin/vidcapture.py
+    extensions: [ gnome-3-38 ]
     environment:
-      LD_LIBRARY_PATH: $SNAP/usr/lib/atlas-base/atlas:$LD_LIBRARY_PATH
+     # LD_LIBRARY_PATH: $SNAP/usr/lib/atlas-base/atlas:$LD_LIBRARY_PATH
+      LD_LIBRARY_PATH: $SNAP/usr/lib/atlas-base/atlas:$SNAP/usr/lib/x86_64-linux-gnu/atlas/:$LD_LIBRARY_PATH
       XWAYLAND_FULLSCREEN_WINDOW_HINT: title="opencv-demo"
-    slots: [ x11 ]
+    slots: [ x11-slot ]
     plugs:
       - camera
       - home
-      - opengl
-      - wayland
-      - x11-plug
+      #- opengl
+      #- wayland
+      #- x11-plug
   facedetect:
-    command: facedetect.py
+    command: bin/facedetect.py
+    extensions: [ gnome-3-38 ]
     environment:
-      LD_LIBRARY_PATH: $SNAP/usr/lib/atlas-base/atlas:$LD_LIBRARY_PATH
+      #LD_LIBRARY_PATH: $SNAP/usr/lib/atlas-base/atlas:$LD_LIBRARY_PATH
+      LD_LIBRARY_PATH: $SNAP/usr/lib/atlas-base/atlas:$SNAP/usr/lib/x86_64-linux-gnu/atlas/:$LD_LIBRARY_PATH
       XWAYLAND_FULLSCREEN_WINDOW_HINT: title="opencv-demo"
-    slots: [ x11 ]
+    slots: [ x11-slot ]
     plugs:
       - camera
       - home
-      - opengl
-      - wayland
-      - x11-plug
+      #- opengl
+      #- wayland
+      #- x11-plug
   eyedetect:
-    command: eyedetect.py
+    command: bin/eyedetect.py
+    extensions: [ gnome-3-38 ]
     environment:
-      LD_LIBRARY_PATH: $SNAP/usr/lib/atlas-base/atlas:$LD_LIBRARY_PATH
+      #LD_LIBRARY_PATH: $SNAP/usr/lib/atlas-base/atlas:$LD_LIBRARY_PATH
+      LD_LIBRARY_PATH: $SNAP/usr/lib/atlas-base/atlas:$SNAP/usr/lib/x86_64-linux-gnu/atlas/:$LD_LIBRARY_PATH
       XWAYLAND_FULLSCREEN_WINDOW_HINT: title="opencv-demo"
-    slots: [ x11 ]
+    slots: [ x11-slot ]
     plugs:
       - camera
       - home
-      - opengl
-      - wayland
-      - x11-plug
+      #- opengl
+      #- wayland
+      #- x11-plug
   facetracker:
-    command: facetracker
+    command: usr/local/bin/facetracker
+    extensions: [ gnome-3-38 ]
     environment:
       XWAYLAND_FULLSCREEN_WINDOW_HINT: title="opencv-demo"
-    slots: [ x11 ]
+    slots: [ x11-slot ]
     plugs:
       - camera
       - home
-      - opengl
-      - wayland
-      - x11-plug
+      #- opengl
+      #- wayland
+      #- x11-plug
 
 plugs:
   x11-plug:
     interface: x11
-
+slots:
+  x11-slot:
+    interface: x11
 parts:
   opencv:
     plugin: cmake
     source: https://github.com/opencv/opencv.git
-    source-tag: 4.0.1
-    configflags:
+    source-tag: 4.6.0
+    cmake-parameters:
+#    configflags:
       - -DINSTALL_C_EXAMPLES=ON
       - -DINSTALL_PYTHON_EXAMPLES=ON
       - -DBUILD_EXAMPLES=ON
       - -DCMAKE_INSTALL_PREFIX=/usr
       - -DOPENCV_EXTRA_MODULES_PATH=contrib/modules
-    after: [ desktop-gtk3, xwayland-kiosk-helper ]
+      - -DWITH_JASPER=ON
+    after: [ xwayland-kiosk-helper ]
     override-build: |
       git clone https://github.com/opencv/opencv_contrib.git "$SNAPCRAFT_PART_BUILD"/contrib
       snapcraftctl build
     build-packages:
       - libjpeg-dev
       - libtiff5-dev
-      - libjasper-dev
-      - libpng12-dev
+      - libpng-dev
+      - libpng16-16 
       - libavcodec-dev
       - libavformat-dev
       - libswscale-dev
       - libv4l-dev
       - libxvidcore-dev
       - libx264-dev
-      - libgtk2.0-dev
-      - libgtk-3-dev
       - libatlas-base-dev
       - gfortran
       - python2.7-dev
@@ -119,15 +132,15 @@ parts:
       - libatk-bridge2.0-0
       - libatlas3-base
       - libatspi2.0-0
-      - libavcodec-ffmpeg-extra56
-      - libavformat-ffmpeg56
-      - libavutil-ffmpeg54
-      - libbluray1
-      - libboost-filesystem1.58.0
-      - libboost-system1.58.0
+      - libavcodec-extra58
+      - libavformat58
+      - libavutil56
+      - libbluray2
+      - libboost-filesystem1.67.0
+      - libboost-system1.67.0
       - libcairo2
       - libcairo-gobject2
-      - libcapnp-0.5.3
+      - libcapnp-0.7.0
       - libdatrie1
       - libdc1394-22
       - libepoxy0
@@ -142,9 +155,8 @@ parts:
       - libgraphite2-3
       - libgsm1
       - libharfbuzz0b
-      - libicu55
-      - libilmbase12
-      - libjasper1
+      - libicu66
+      - libilmbase24
       - libjbig0
       - libjpeg-turbo8
       - libltdl7
@@ -157,27 +169,25 @@ parts:
       - libogg0
       - libopencore-amrnb0
       - libopencore-amrwb0
-      - libopenexr22
-      - libopenjpeg5
+      - libopenexr24
+      - libopenjp2-7
       - libopus0
       - liborc-0.4-0
-      - libpango-1.0-0
-      - libpangocairo-1.0-0
-      - libpangoft2-1.0-0
       - libpixman-1-0
-      - libprotobuf-lite9v5
+      - libprotobuf-lite17
       - libpython2.7
-      - libpython3.5
+      - libpython3.9
       - libraw1394-11
       - librtmp1
-      - libschroedinger-1.0-0
+      - libschroedinger-coordgenlibs1
+      - libschroedinger-maeparser1
       - libshine3
       - libsnappy1v5
       - libsoxr0
       - libspeex1
       - libssh-gcrypt-4
-      - libswresample-ffmpeg1
-      - libswscale-ffmpeg3
+      - libswresample3
+      - libswscale5
       - libthai0
       - libtheora0
       - libtiff5
@@ -185,20 +195,20 @@ parts:
       - libusb-1.0-0
       - libv4l-0
       - libv4lconvert0
-      - libva1
+      - libva2
       - libvo-aacenc0
       - libvo-amrwbenc0
       - libvorbis0a
       - libvorbisenc2
-      - libvpx3
+      - libvpx6
       - libwavpack1
       - libwayland-client0
       - libwayland-cursor0
       - libwayland-egl1-mesa
-      - libwebp5
+      - libwebp6
       - libx11-6
-      - libx264-148
-      - libx265-79
+      - libx264-155
+      - libx265-179
       - libxau6
       - libxcb1
       - libxcb-render0
@@ -218,9 +228,19 @@ parts:
       - libxvidcore4
       - libzvbi0
       - python-numpy
+      - libtesseract4
       - to amd64: [ "libcrystalhd3:amd64", "libnuma1:amd64" ]
       - to i386: [ "libcrystalhd3:i386", "libnuma1:i386" ]
-
+  xwayland-kiosk-helper:
+    plugin: cmake
+    source: xwayland-preload
+    build-packages:
+      - build-essential
+    stage-packages:
+      - xwayland
+      - i3
+      - libegl1-mesa
+      - libgl1-mesa-glx
   demos:
     plugin: dump
     source: demos
@@ -230,3 +250,19 @@ parts:
     plugin: cmake
     source: https://github.com/alfonsosanchezbeato/Single_Face_Tracking_using_5_inbuilt_OpenCV_trackers.git
     source-tag: master
+    override-build: |
+      cp ${SNAPCRAFT_PROJECT_DIR}/facetracker.cpp ${SNAPCRAFT_PART_SRC}/
+      snapcraftctl build
+  cleanup:
+    after:
+      - facetracker
+    plugin: nil
+    build-snaps:
+      - core20
+      - gnome-3-38-2004
+    override-prime: |
+      set -eux
+      for snap in "core20" "gnome-3-38-2004"; do  # List all content-snaps and base snaps you're using here
+        cd "/snap/$snap/current" && find . -type f,l -exec rm -f "$SNAPCRAFT_PRIME/{}" \;
+      done  
+
