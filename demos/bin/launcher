@@ -1,0 +1,24 @@
+#! /bin/sh
+
+CFG="$(snapctl get demo)" # get snap config
+DEMO="${CFG:-eyedetect}" # default to eye detection if nothing is set
+
+case $DEMO in
+  vidcapture)
+    CMD="$SNAP/bin/vidcapture.py"
+    ;;
+  facedetect)
+    CMD="$SNAP/bin/facedetect.py"
+    ;;
+  eyedetect)
+    CMD="$SNAP/bin/eyedetect.py"
+    ;;
+  facetracker)
+    CMD="$SNAP/usr/local/bin/facetracker"
+    ;;
+  wrench)
+    CMD="$SNAP/bin/wrench.py $SNAP/usr/share/opencv4/haarcascades/wrenches.xml"
+    ;;
+esac
+
+exec $CMD

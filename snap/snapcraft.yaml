@@ -15,100 +15,42 @@ description: |
 grade: stable
 confinement: strict
 
+layout:
+  /usr/share/X11:
+    bind: $SNAP/usr/share/X11
+  /usr/bin/xkbcomp:
+    symlink: $SNAP/usr/bin/xkbcomp
+
 apps:
   daemon:
-    command: snap/command-chain/desktop-launch $SNAP/usr/local/bin/xwayland-kiosk-launch $SNAP/bin/eyedetect.py
+    command: usr/local/bin/x11_kiosk_launch $SNAP/bin/launcher
+    command-chain:
+      - env-setup
     daemon: simple
     extensions: [ gnome-3-38 ]
-    
     environment:
-      LD_LIBRARY_PATH: $SNAP/usr/lib/atlas-base/atlas:$SNAP/usr/lib/x86_64-linux-gnu/atlas/:$LD_LIBRARY_PATH
-      XWAYLAND_FULLSCREEN_WINDOW_HINT: title="opencv-demo"
-    slots: [ x11-slot ]
+      LD_LIBRARY_PATH: $SNAP/usr/lib/atlas-base/atlas:$SNAP/usr/lib/x86_64-linux-gnu/atlas
     plugs:
       - camera
       - home
-     # - mir
       - network
       - network-bind
-     # - opengl
-     # - wayland
-     # - x11-plug
-  vidcapture:
-    command: bin/vidcapture.py
-    extensions: [ gnome-3-38 ]
-    environment:
-     # LD_LIBRARY_PATH: $SNAP/usr/lib/atlas-base/atlas:$LD_LIBRARY_PATH
-      LD_LIBRARY_PATH: $SNAP/usr/lib/atlas-base/atlas:$SNAP/usr/lib/x86_64-linux-gnu/atlas/:$LD_LIBRARY_PATH
-      XWAYLAND_FULLSCREEN_WINDOW_HINT: title="opencv-demo"
-    slots: [ x11-slot ]
-    plugs:
-      - camera
-      - home
-      #- opengl
-      #- wayland
-      #- x11-plug
-  facedetect:
-    command: bin/facedetect.py
-    extensions: [ gnome-3-38 ]
-    environment:
-      #LD_LIBRARY_PATH: $SNAP/usr/lib/atlas-base/atlas:$LD_LIBRARY_PATH
-      LD_LIBRARY_PATH: $SNAP/usr/lib/atlas-base/atlas:$SNAP/usr/lib/x86_64-linux-gnu/atlas/:$LD_LIBRARY_PATH
-      XWAYLAND_FULLSCREEN_WINDOW_HINT: title="opencv-demo"
-    slots: [ x11-slot ]
-    plugs:
-      - camera
-      - home
-      #- opengl
-      #- wayland
-      #- x11-plug
-  eyedetect:
-    command: bin/eyedetect.py
-    extensions: [ gnome-3-38 ]
-    environment:
-      #LD_LIBRARY_PATH: $SNAP/usr/lib/atlas-base/atlas:$LD_LIBRARY_PATH
-      LD_LIBRARY_PATH: $SNAP/usr/lib/atlas-base/atlas:$SNAP/usr/lib/x86_64-linux-gnu/atlas/:$LD_LIBRARY_PATH
-      XWAYLAND_FULLSCREEN_WINDOW_HINT: title="opencv-demo"
-    slots: [ x11-slot ]
-    plugs:
-      - camera
-      - home
-      #- opengl
-      #- wayland
-      #- x11-plug
-  facetracker:
-    command: usr/local/bin/facetracker
-    extensions: [ gnome-3-38 ]
-    environment:
-      XWAYLAND_FULLSCREEN_WINDOW_HINT: title="opencv-demo"
-    slots: [ x11-slot ]
-    plugs:
-      - camera
-      - home
-      #- opengl
-      #- wayland
-      #- x11-plug
+      - opengl
+      - wayland
 
-plugs:
-  x11-plug:
-    interface: x11
-slots:
-  x11-slot:
-    interface: x11
 parts:
   opencv:
     plugin: cmake
     source: https://github.com/opencv/opencv.git
     source-tag: 4.6.0
+    source-depth: 1
     cmake-parameters:
-#    configflags:
       - -DINSTALL_C_EXAMPLES=ON
       - -DINSTALL_PYTHON_EXAMPLES=ON
       - -DBUILD_EXAMPLES=ON
       - -DCMAKE_INSTALL_PREFIX=/usr
       - -DOPENCV_EXTRA_MODULES_PATH=contrib/modules
       - -DWITH_JASPER=ON
-    after: [ xwayland-kiosk-helper ]
     override-build: |
       git clone https://github.com/opencv/opencv_contrib.git "$SNAPCRAFT_PART_BUILD"/contrib
       snapcraftctl build
@@ -160,10 +102,6 @@ parts:
       - libjbig0
       - libjpeg-turbo8
       - libltdl7
-      - libmirclient9
-      - libmircommon7
-      - libmircore1
-      - libmirprotobuf3
       - libmodplug1
       - libmp3lame0
       - libogg0
@@ -232,15 +170,8 @@ parts:
       - to amd64: [ "libcrystalhd3:amd64", "libnuma1:amd64" ]
       - to i386: [ "libcrystalhd3:i386", "libnuma1:i386" ]
   xwayland-kiosk-helper:
-    plugin: cmake
-    source: xwayland-preload
-    build-packages:
-      - build-essential
-    stage-packages:
-      - xwayland
-      - i3
-      - libegl1-mesa
-      - libgl1-mesa-glx
+    plugin: nil
+    stage-snaps: [mir-kiosk-x11]
   demos:
     plugin: dump
     source: demos
@@ -253,6 +184,14 @@ parts:
     override-build: |
       cp ${SNAPCRAFT_PROJECT_DIR}/facetracker.cpp ${SNAPCRAFT_PART_SRC}/
       snapcraftctl build
+
+  cascades:
+    after: [ facetracker ]
+    plugin: dump
+    source: cascades
+    organize:
+      wrenches.xml: usr/share/opencv4/haarcascades/wrenches.xml
+
   cleanup:
     after:
       - facetracker
