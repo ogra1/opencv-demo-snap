@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=OpenCV Snap Demo
+Comment=Demo of OpenCV face and object Detection
+Icon=${SNAP}/meta/gui/icon.png
+Exec=opencv-demo-ogra.classic
+Terminal=false
+Categories=Utility;

@@ -1,8 +1,0 @@
-[Desktop Entry]
-Type=Application
-Name=OpenCV Video Capture Demo
-Comment=Demo of OpenCV Video Capture
-Icon=${SNAP}/meta/gui/icon.png
-Exec=opencv-demo-ogra.vidcapture
-Terminal=false
-Categories=Utility;

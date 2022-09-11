@@ -1,8 +1,0 @@
-[Desktop Entry]
-Type=Application
-Name=OpenCV Eye Detection Demo
-Comment=Demo of OpenCV Eye Detection
-Icon=${SNAP}/meta/gui/icon.png
-Exec=opencv-demo-ogra.eyedetect
-Terminal=false
-Categories=Utility;
