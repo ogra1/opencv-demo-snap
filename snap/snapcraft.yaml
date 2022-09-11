@@ -35,14 +35,33 @@ apps:
     extensions: [ gnome-3-38 ]
     environment:
       LD_LIBRARY_PATH: $SNAP/usr/lib/atlas-base/atlas:$SNAP/usr/lib/x86_64-linux-gnu/atlas
+      GTK_USE_PORTAL: 0
     plugs:
       - camera
       - home
+      - login-session-control
+      - mount-observe
       - network
       - network-bind
       - opengl
+      - process-control
       - wayland
-
+  classic:
+    command: bin/launcher
+    extensions: [ gnome-3-38 ]
+    environment:
+      LD_LIBRARY_PATH: $SNAP/usr/lib/atlas-base/atlas:$SNAP/usr/lib/x86_64-linux-gnu/atlas
+      DISABLE_WAYLAND: 1
+    plugs:
+      - camera
+      - home
+      - login-session-control
+      - mount-observe
+      - network
+      - network-bind
+      - opengl
+      - process-control
+      - wayland
 parts:
   opencv:
     plugin: cmake
