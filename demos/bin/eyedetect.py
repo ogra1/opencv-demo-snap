@@ -28,6 +28,11 @@ def detect(gray, frame):
   return frame
 
 video_capture = cv2.VideoCapture(0)
+
+cv2.namedWindow('Video',cv2.WINDOW_NORMAL)
+cv2.setWindowProperty('Video', cv2.WND_PROP_ASPECT_RATIO,
+                      cv2.WINDOW_FULLSCREEN)
+
 while True:
   ret, frame = video_capture.read()
   gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
