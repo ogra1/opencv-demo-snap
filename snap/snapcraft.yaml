@@ -40,7 +40,7 @@ apps:
     extensions: [ gnome-3-38 ]
     environment:
       LD_LIBRARY_PATH: $SNAP/usr/lib/atlas-base/atlas:$SNAP/usr/lib/x86_64-linux-gnu/atlas
-      PYTHONPATH: $PYTHONPATH:$SNAP/usr/lib/python3.8/site-packages:$SNAP/usr/lib/python3/dist-packages
+      PYTHONPATH: $SNAP/usr/lib/python3.8/site-packages:$SNAP/usr/lib/python3/dist-packages
       GTK_USE_PORTAL: 0
     plugs:
       - camera
@@ -57,7 +57,7 @@ apps:
     extensions: [ gnome-3-38 ]
     environment:
       LD_LIBRARY_PATH: $SNAP/usr/lib/atlas-base/atlas:$SNAP/usr/lib/x86_64-linux-gnu/atlas
-      PYTHONPATH: $PYTHONPATH:$SNAP/usr/lib/python3.8/site-packages:$SNAP/usr/lib/python3/dist-packages
+      PYTHONPATH: $SNAP/usr/lib/python3.8/site-packages:$SNAP/usr/lib/python3/dist-packages
       DISABLE_WAYLAND: 1
     plugs:
       - camera
