@@ -268,6 +268,9 @@ int main(int argc, char **argv)
         return 1;
     }
 
+    video.set(cv::CAP_PROP_FRAME_WIDTH,1280);
+    video.set(cv::CAP_PROP_FRAME_HEIGHT,720);
+
     namedWindow(windowTitle, WINDOW_NORMAL);
     //setWindowProperty(windowTitle, WND_PROP_FULLSCREEN, WINDOW_FULLSCREEN);
 

@@ -11,6 +11,11 @@ faceCascade = cv2.CascadeClassifier(cascPath)
 
 video_capture = cv2.VideoCapture(0)
 
+width = 1280
+height = 720
+video_capture.set(cv2.CAP_PROP_FRAME_WIDTH, width)
+video_capture.set(cv2.CAP_PROP_FRAME_HEIGHT, height)
+
 cv2.namedWindow('Video',cv2.WINDOW_NORMAL)
 cv2.setWindowProperty('Video', cv2.WND_PROP_ASPECT_RATIO,
                       cv2.WINDOW_FULLSCREEN)

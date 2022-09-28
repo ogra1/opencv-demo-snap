@@ -67,6 +67,12 @@ apps:
       - opengl
       - process-control
       - wayland
+  v4l2-ctl:
+    command: usr/bin/v4l2-ctl
+    plugs:
+      - camera
+      - home
+
 parts:
   opencv:
     plugin: cmake
@@ -221,6 +227,12 @@ parts:
     source: cascades
     organize:
       wrenches.xml: usr/share/opencv4/haarcascades/wrenches.xml
+
+  v4l2-ctl:
+    after: [ cascades ]
+    plugin: nil
+    stage-packages:
+      - v4l-utils
 
   cleanup:
     after:
