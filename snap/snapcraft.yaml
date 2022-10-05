@@ -39,7 +39,7 @@ apps:
     daemon: simple
     extensions: [ gnome-3-38 ]
     environment:
-      LD_LIBRARY_PATH: $SNAP/usr/lib/atlas-base/atlas:$SNAP/usr/lib/x86_64-linux-gnu/atlas
+            LD_LIBRARY_PATH: $SNAP/usr/lib/atlas-base/atlas:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/atlas
       PYTHONPATH: $SNAP/usr/lib/python3.8/site-packages:$SNAP/usr/lib/python3/dist-packages
       GTK_USE_PORTAL: 0
     plugs:
@@ -56,7 +56,7 @@ apps:
     command: bin/launcher
     extensions: [ gnome-3-38 ]
     environment:
-      LD_LIBRARY_PATH: $SNAP/usr/lib/atlas-base/atlas:$SNAP/usr/lib/x86_64-linux-gnu/atlas
+      LD_LIBRARY_PATH: $SNAP/usr/lib/atlas-base/atlas:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/atlas
       PYTHONPATH: $SNAP/usr/lib/python3.8/site-packages:$SNAP/usr/lib/python3/dist-packages
       DISABLE_WAYLAND: 1
     plugs:
