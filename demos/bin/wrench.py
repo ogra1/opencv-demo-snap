@@ -2,14 +2,25 @@
 
 import cv2
 import sys
+import subprocess
 
 cascPath = sys.argv[1]
 faceCascade = cv2.CascadeClassifier(cascPath)
 
-video_capture = cv2.VideoCapture(0)
-
+# force 720p as default
 width = 1280
 height = 720
+
+cpuinfo = open('/proc/cpuinfo', 'r').readlines()[-1]
+
+if 'Raspberry Pi' in cpuinfo:
+  # pi is to slow for 720p, go to a lower resolution
+  width = 640
+  height = 360
+  subprocess.run(['logger', 'On a Pi3, switching to lower resolution (640x360) !'])
+
+video_capture = cv2.VideoCapture(0)
+
 video_capture.set(cv2.CAP_PROP_FRAME_WIDTH, width)
 video_capture.set(cv2.CAP_PROP_FRAME_HEIGHT, height)
 

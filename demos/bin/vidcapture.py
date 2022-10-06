@@ -2,11 +2,22 @@
 
 import numpy as np
 import cv2
+import subprocess
+
+# force 720p as default
+width = 1280
+height = 720
+
+cpuinfo = open('/proc/cpuinfo', 'r').readlines()[-1]
+
+if 'Raspberry Pi' in cpuinfo:
+  # pi is to slow for 720p, go to a lower resolution
+  width = 640
+  height = 360
+  subprocess.run(['logger', 'On a Pi3, switching to lower resolution !'])
 
 cap = cv2.VideoCapture(0)
 
-width = 1280
-height = 720
 cap.set(cv2.CAP_PROP_FRAME_WIDTH, width)
 cap.set(cv2.CAP_PROP_FRAME_HEIGHT, height)
 
