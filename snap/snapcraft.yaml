@@ -49,6 +49,7 @@ apps:
       - login-session-control
       - network
       - network-bind
+      - network-observe
       - opengl
       - process-control
       - wayland
@@ -64,6 +65,7 @@ apps:
       - home
       - network
       - network-bind
+      - network-observe
       - opengl
       - process-control
       - wayland
@@ -202,6 +204,7 @@ parts:
       - libzvbi0
       - python3-numpy
       - python3-minimal
+      - python3-pil
       - libtesseract4
       - to amd64: [ "libcrystalhd3:amd64", "libnuma1:amd64" ]
       - to i386: [ "libcrystalhd3:i386", "libnuma1:i386" ]
