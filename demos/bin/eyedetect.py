@@ -3,8 +3,15 @@
 import cv2
 import os
 import subprocess
+import numpy as np
+from PIL import ImageFont, ImageDraw, Image
 
 snap = os.environ["SNAP"]
+fontface = snap+'/gnome-platform/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf'
+fontsize = 10
+myip = subprocess.Popen(['getip'],stdout=subprocess.PIPE).stdout.readline().decode('utf-8').rstrip()
+showip = subprocess.Popen(['snapctl', 'get', 'ip' ],stdout=subprocess.PIPE).stdout.readline().decode('utf-8').rstrip()
+
 
 # force 720p as default
 width = 1280
@@ -53,7 +60,18 @@ while True:
   ret, frame = video_capture.read()
   gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
   canvas = detect(gray, frame)
-  cv2.imshow("Video", canvas)
+
+  # show a text overlay with IP address
+  if showip == 'hidden':
+    cv2.imshow("Video", canvas)
+  else:
+    pil_im = Image.fromarray(frame)
+    draw = ImageDraw.Draw(pil_im)
+    font = ImageFont.truetype(fontface, fontsize)
+    draw.text((2, height-(fontsize+2)), 'IP: '+myip, font=font)
+    cv2_im_processed = np.array(pil_im)
+
+    cv2.imshow("Video", cv2_im_processed)
   # cv2.imshow("Video", gray)
   if cv2.waitKey(1) & 0xFF == ord('q'):
     break
