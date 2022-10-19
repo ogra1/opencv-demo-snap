@@ -237,6 +237,12 @@ parts:
     stage-packages:
       - v4l-utils
 
+  getip:
+    source: helpers
+    plugin: make
+    organize:
+      getip: usr/bin/getip
+
   cleanup:
     after:
       - facetracker
